@@ -4,41 +4,47 @@ from io import BytesIO
 import json
 
 def send_image_to_server(image_path):
-    with open(image_path, "rb") as image_file:
-        image_data = image_file.read()
+    try:
+        with open(image_path, "rb") as image_file:
+            image_data = image_file.read()
 
-    connection = http.client.HTTPSConnection("locate-image-7cs5mab6na-uc.a.run.app")
-    headers = {
-        "Content-Type": "multipart/form-data; boundary=boundary",
-        "accept": "*/*",
-        "accept-language": "en-US,en;q=0.9,tr;q=0.8,ar;q=0.7",
-        "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "cross-site",
-        "Referer": "https://geospy.web.app/",
-        "Referrer-Policy": "strict-origin-when-cross-origin",
-    }
+        connection = http.client.HTTPSConnection("locate-image-7cs5mab6na-uc.a.run.app")
+        headers = {
+            "Content-Type": "multipart/form-data; boundary=boundary",
+            "accept": "*/*",
+            "accept-language": "en-US,en;q=0.9,tr;q=0.8,ar;q=0.7",
+            "sec-ch-ua": '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"Windows"',
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "cross-site",
+            "Referer": "https://geospy.web.app/",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+        }
 
-    body = BytesIO()
-    boundary = b"--boundary"
-    body.write(boundary + b"\r\n")
-    body.write(b'Content-Disposition: form-data; name="image"; filename="image.jpg"\r\n')
-    body.write(b"Content-Type: " + mimetypes.guess_type("image.jpg")[0].encode() + b"\r\n\r\n")
-    body.write(image_data)
-    body.write(b"\r\n")
-    body.write(boundary + b"--\r\n")
+        body = BytesIO()
+        boundary = b"--boundary"
+        body.write(boundary + b"\r\n")
+        body.write(b'Content-Disposition: form-data; name="image"; filename="image.jpg"\r\n')
+        body.write(b"Content-Type: " + mimetypes.guess_type("image.jpg")[0].encode() + b"\r\n\r\n")
+        body.write(image_data)
+        body.write(b"\r\n")
+        body.write(boundary + b"--\r\n")
 
-    connection.request("POST", "/", body=body.getvalue(), headers=headers)
-    response = connection.getresponse()
-    response_data = response.read().decode()
+        connection.request("POST", "/", body=body.getvalue(), headers=headers)
+        response = connection.getresponse()
+        response_data = response.read().decode()
 
-    if response_data and response.status == 200:
-        return json.loads(response_data)
-    else:
-        raise Exception(f"Service failed with status: {response.status} {response.reason}")
+        if response_data and response.status == 200:
+            return json.loads(response_data)
+        else:
+            print(f"Error: Service failed with status: {response.status} {response.reason}")
+            print(f"Response data: {response_data}")
+            raise Exception(f"Service failed with status: {response.status} {response.reason}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise
 
 def display_map(coordinates):
     latitude, longitude = coordinates
