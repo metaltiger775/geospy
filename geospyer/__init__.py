@@ -1,1 +1,3 @@
-from .geospyer import country, city, coordinates, explanation, maps, locate
+from .geospy import GeoSpy
+
+__all__ = ["GeoSpy"]
