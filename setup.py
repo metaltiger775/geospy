@@ -2,19 +2,14 @@ from setuptools import setup, find_packages
 
 setup(
     name='geospyer',
-    version='0.1.7',
+    version='0.1.8',
     packages=find_packages(),
     install_requires=[
         'requests',
     ],
-    entry_points={
-    'console_scripts': [
-        'geospyer=geospyer.cli:main',
-    ],
-},
-    author='Atiilla',
+    author='metaltiger775',
     description='AI powered geo-location to uncover the location of photos.',
-    url='https://github.com/atiilla/geospy',
+    url='https://github.com/metaltiger775/geospy',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
