@@ -1,1 +1,1 @@
-from .geospy import country, city, locate, explanation, coordinates, maps
+from .geospyer import country, city, coordinates, explanation, maps, locate
