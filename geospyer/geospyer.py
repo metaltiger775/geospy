@@ -1,51 +1,34 @@
 import json
-from .utils import send_image_to_server, parse_response
+from .utils import send_image_to_server, display_map
 
 def country(image_path):
     response_data = send_image_to_server(image_path)
-    if response_data:
-        return parse_response(response_data, 'country')
-    else:
-        return None
+    return response_data.get("country")
 
 def city(image_path):
     response_data = send_image_to_server(image_path)
-    if response_data:
-        return parse_response(response_data, 'city')
-    else:
-        return None
-
-def explanation(image_path):
-    response_data = send_image_to_server(image_path)
-    if response_data:
-        return parse_response(response_data, 'explanation')
-    else:
-        return None
+    return response_data.get("city")
 
 def coordinates(image_path):
     response_data = send_image_to_server(image_path)
-    if response_data:
-        return parse_response(response_data, 'coordinates')
-    else:
-        return None
+    return response_data.get("coordinates")
+
+def explanation(image_path):
+    response_data = send_image_to_server(image_path)
+    return response_data.get("explanation")
 
 def maps(image_path):
     response_data = send_image_to_server(image_path)
-    if response_data:
-        return parse_response(response_data, 'google_maps_link')
-    else:
-        return None
+    coordinates = response_data.get("coordinates")
+    return display_map(coordinates)
 
 def locate(image_path):
     response_data = send_image_to_server(image_path)
-    if response_data:
-        result = {
-            'country': parse_response(response_data, 'country'),
-            'city': parse_response(response_data, 'city'),
-            'explanation': parse_response(response_data, 'explanation'),
-            'coordinates': parse_response(response_data, 'coordinates'),
-            'google_maps_link': parse_response(response_data, 'google_maps_link'),
-        }
-        return result
-    else:
-        return None
+    result = {
+        "country": response_data.get("country"),
+        "city": response_data.get("city"),
+        "coordinates": response_data.get("coordinates"),
+        "explanation": response_data.get("explanation"),
+        "maps_link": display_map(response_data.get("coordinates"))
+    }
+    return json.dumps(result, indent=4)
